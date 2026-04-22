@@ -39,7 +39,9 @@ func (app *APP) SynchronizeSettings(data map[string]interface{}) {
 	COPY_STATUS = data["enableCopy"].(bool)
 	MOVE_STATUS = data["enableMove"].(bool)
 
+	USER_LOCK_MU.Lock()
 	USER_LOCK = map[string]bool{"localhost+curl": false, "127.0.0.1+curl": false}
+	USER_LOCK_MU.Unlock()
 
 	if IS_RUNNING {
 		UpdateShareHandler()
