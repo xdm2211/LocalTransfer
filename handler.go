@@ -72,11 +72,15 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	// 如果用户登录密码等于文件传输服务登录密码, 则取消该用户登录锁.
 	if password == LOGIN_PASSWORD {
+		USER_LOCK_MU.Lock()
 		USER_LOCK[user] = false
+		USER_LOCK_MU.Unlock()
 		go func(user string) {
 			// 启动该用户的登录锁协程, 半小时后再次给该 user 设置锁, 需要重新登录.
 			time.Sleep(30 * time.Minute)
+			USER_LOCK_MU.Lock()
 			delete(USER_LOCK, user)
+			USER_LOCK_MU.Unlock()
 		}(user)
 		// 登录成功, 重定向到 index.html 页面.
 		http.Redirect(w, r, "/", http.StatusMovedPermanently)
