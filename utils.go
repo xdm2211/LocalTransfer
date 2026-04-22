@@ -76,6 +76,8 @@ func GetLocalIPv4Addresses() string {
 
 // 用户若登录成功, 则授权.
 func AuthorizeUser(user string) bool {
+	USER_LOCK_MU.Lock()
+	defer USER_LOCK_MU.Unlock()
 	if _, ok := USER_LOCK[user]; ok {
 		return USER_LOCK[user]
     } else {
