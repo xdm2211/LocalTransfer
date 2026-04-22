@@ -3,6 +3,7 @@ package main
 import (
 	"embed"
 	"net/http"
+	"sync"
 )
 
 //go:embed UI/*
@@ -28,6 +29,7 @@ var MOVE_STATUS         bool = true   // 移动放置状态.
 var RENAME_STATUS       bool = true   // 重命名状态.
 
 var USER_LOCK map[string]bool = map[string]bool{"localhost+curl": false, "127.0.0.1+curl": false}
+var USER_LOCK_MU sync.Mutex
 
 var CURRENT_HANDLER http.Handler = http.NotFoundHandler()
 
